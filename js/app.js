@@ -1,328 +1,123 @@
 'use strict';
 
 
-
-
-
-//GLOBALS
+//* GLOBAL VARIABLES
 
 let salesSection = document.getElementById('sales-data');
 
 console.dir(salesSection);
 
-//let hoursOfOperation = 15;
+let openHours = ['6:00am', '7:00am', '8:00am', '9:00am', '10:00am', '11:00am', '12:00pm', '1:00pm', '2:00pm', '3:00pm', '4:00pm', '5:00pm', '6:00pm', '7:00pm',];
 
-//let hourlyCustomers = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,];
+let storefronts = [];
 
-//let hourlySales = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,];
+let tableReference = '';
 
-let listableSales = ['6AM: ', '7AM: ', '8AM: ', '9AM: ', '10AM: ', '11AM: ', '12PM: ', '1PM: ', '1PM: ', '2PM: ', '3PM: ', '4PM: ', '5PM: ', '6PM: ', '7PM: '];
 
-//let dailyTotal = 0;
+//* CONSTRUCTOR
 
-//HELPER FUNCTIONS/UTILITIES
+function StoreLocation(city, minCust, maxCust, avgCookiesPerSale) {
+  this.city = city;
+  this.hoursOfOperation = 15;
+  this.minCust = minCust;
+  this.maxCust = maxCust;
+  this.avgCookiesPerSale = avgCookiesPerSale;
+  this.dailyTotal = 0;
+  this.hourlyCustomers = [];
+  this.hourlySales = [];
+  this.listableSales = [];
+  storefronts.push(this);
 
+}
+
+
+//* CONSTRUCT OBJECTS
+
+new StoreLocation('Seattle', 23, 65, 6.3);
+new StoreLocation('Tokyo', 3, 24, 1.2);
+new StoreLocation('Dubai', 11, 38, 3.7);
+new StoreLocation('Paris', 20, 38, 2.3);
+new StoreLocation('Lima', 2, 16, 4.6);
+
+
+//* PROTOTYPE METHODS
+
+StoreLocation.prototype.getCustomers = function () {
+  for (let i = 0; i < this.hoursOfOperation; i++) {
+    this.hourlyCustomers[i] = randomInt(this.minCust, this.maxCust);
+  }
+};
+
+StoreLocation.prototype.getSales = function () {
+  for (let i = 0; i < this.hoursOfOperation; i++) {
+    this.hourlySales[i] = this.hourlyCustomers[i] * this.avgCookiesPerSale;
+    this.hourlySales[i] = this.hourlySales[i].toFixed(0);
+    this.dailyTotal += Number(this.hourlySales[i]);
+  }
+};
+
+StoreLocation.prototype.renderRow = function () {
+  let tableElem = tableReference;
+
+  let tableRow = document.createElement('tr');
+  tableElem.appendChild(tableRow);
+
+  let tableData = document.createElement('td');
+  tableRow.appendChild(tableData);
+  tableData.textContent = this.city;
+
+  for (let i = 0; i < openHours.length; i++) {
+    tableData = document.createElement('td');
+    tableData.textContent = this.hourlySales[i];
+    tableRow.appendChild(tableData);
+  }
+  tableData = document.createElement('td');
+  tableData.textContent = this.dailyTotal;
+  tableRow.appendChild(tableData);
+};
+
+
+//? Creates the header for the table, and also grabs and globally stores a reference to the table we just created so it can be navigated to by the renderRow prototypes.
+function deployTableHeader() {
+  let articleElem = document.createElement('article');
+  salesSection.appendChild(articleElem);
+
+  let tableElem = document.createElement('table');
+  articleElem.appendChild(tableElem);
+
+  let tableHeader = document.createElement('th');
+  tableElem.appendChild(tableHeader);
+  tableHeader.textContent = '     ';
+
+  for (let i = 0; i < openHours.length; i++) {
+    let tableHeader = document.createElement('th');
+    tableElem.appendChild(tableHeader);
+    tableHeader.textContent = openHours[i];
+  }
+
+  tableHeader = document.createElement('th');
+  tableElem.appendChild(tableHeader);
+  tableHeader.textContent = 'Daily Location Total';
+  return tableReference = tableElem;
+}
+
+//? EXECUTE SETUP FUNCTIONS
+
+deployTableHeader();
+
+
+//! EXECUTE PROTOTYPE METHODS
+
+for (let i = 0; i < storefronts.length; i++) {
+  storefronts[i].getCustomers();
+  storefronts[i].getSales();
+  storefronts[i].renderRow();
+}
+
+
+//* HELPER FUNCTIONS/UTILITIES
 
 // ? body of function grabbed from MDN
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
-
-//OBJECT LITERALS
-
-let Seattle = {
-  City: 'Seattle',
-  hoursOfOperation: 15,
-  minCust: 23,
-  maxCust: 65,
-  avgCookiesPerSale: 6.3,
-  dailyTotal: 0,
-  hourlyCustomers: [],
-  hourlySales: [],
-  listableSales: [],
-
-  getCustomers: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.hourlyCustomers[i] = randomInt(this.minCust, this.maxCust);
-    }
-  },
-
-  getSales: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.hourlySales[i] = this.hourlyCustomers[i] * this.avgCookiesPerSale;
-      this.hourlySales[i] = this.hourlySales[i].toFixed(0);
-      this.dailyTotal += Number(this.hourlySales[i]);
-    }
-  },
-
-  getListableSales: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.listableSales[i] = listableSales[i] + this.hourlySales[i] + ' cookies';
-    }
-    this.listableSales.push('Total: ' + this.dailyTotal + ' cookies');
-  },
-
-  render: function () {
-
-    // **** DOM ****
-    let articleElem = document.createElement('article');
-    salesSection.appendChild(articleElem);
-
-    let h2Elem = document.createElement('h2');
-    h2Elem.textContent = this.City;
-    articleElem.appendChild(h2Elem);
-
-    let ulElem = document.createElement('ul');
-    articleElem.appendChild(ulElem);
-
-    for (let i = 0; i < this.hoursOfOperation + 1; i++) {
-      let liElem = document.createElement('li');
-      liElem.textContent = this.listableSales[i];
-      ulElem.appendChild(liElem);
-    }
-  }
-};
-
-
-let Tokyo = {
-  City: 'Tokyo',
-  hoursOfOperation: 15,
-  minCust: 3,
-  maxCust: 24,
-  avgCookiesPerSale: 1.2,
-  dailyTotal: 0,
-  hourlyCustomers: [],
-  hourlySales: [],
-  listableSales: [],
-
-  getCustomers: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.hourlyCustomers[i] = randomInt(this.minCust, this.maxCust);
-    }
-  },
-
-  getSales: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.hourlySales[i] = this.hourlyCustomers[i] * this.avgCookiesPerSale;
-      this.hourlySales[i] = this.hourlySales[i].toFixed(0);
-      this.dailyTotal += Number(this.hourlySales[i]);
-    }
-  },
-
-  getListableSales: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.listableSales[i] = listableSales[i] + this.hourlySales[i] + ' cookies';
-    }
-    this.listableSales.push('Total: ' + this.dailyTotal + ' cookies');
-  },
-
-  render: function () {
-
-    // **** DOM ****
-    let articleElem = document.createElement('article');
-    salesSection.appendChild(articleElem);
-
-    let h2Elem = document.createElement('h2');
-    h2Elem.textContent = this.City;
-    articleElem.appendChild(h2Elem);
-
-    let ulElem = document.createElement('ul');
-    articleElem.appendChild(ulElem);
-
-    for (let i = 0; i < this.hoursOfOperation + 1; i++) {
-      let liElem = document.createElement('li');
-      liElem.textContent = this.listableSales[i];
-      ulElem.appendChild(liElem);
-    }
-  }
-};
-
-let Dubai = {
-  City: 'Dubai',
-  hoursOfOperation: 15,
-  minCust: 11,
-  maxCust: 38,
-  avgCookiesPerSale: 3.7,
-  dailyTotal: 0,
-  hourlyCustomers: [],
-  hourlySales: [],
-  listableSales: [],
-
-  getCustomers: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.hourlyCustomers[i] = randomInt(this.minCust, this.maxCust);
-    }
-  },
-
-  getSales: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.hourlySales[i] = this.hourlyCustomers[i] * this.avgCookiesPerSale;
-      this.hourlySales[i] = this.hourlySales[i].toFixed(0);
-      this.dailyTotal += Number(this.hourlySales[i]);
-    }
-  },
-
-  getListableSales: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.listableSales[i] = listableSales[i] + this.hourlySales[i] + ' cookies';
-    }
-    this.listableSales.push('Total: ' + this.dailyTotal + ' cookies');
-  },
-
-  render: function () {
-
-    // **** DOM ****
-    let articleElem = document.createElement('article');
-    salesSection.appendChild(articleElem);
-
-    let h2Elem = document.createElement('h2');
-    h2Elem.textContent = this.City;
-    articleElem.appendChild(h2Elem);
-
-    let ulElem = document.createElement('ul');
-    articleElem.appendChild(ulElem);
-
-    for (let i = 0; i < this.hoursOfOperation + 1; i++) {
-      let liElem = document.createElement('li');
-      liElem.textContent = this.listableSales[i];
-      ulElem.appendChild(liElem);
-    }
-  }
-};
-
-let Paris = {
-  City: 'Paris',
-  hoursOfOperation: 15,
-  minCust: 20,
-  maxCust: 38,
-  avgCookiesPerSale: 2.3,
-  dailyTotal: 0,
-  hourlyCustomers: [],
-  hourlySales: [],
-  listableSales: [],
-
-  getCustomers: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.hourlyCustomers[i] = randomInt(this.minCust, this.maxCust);
-    }
-  },
-
-  getSales: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.hourlySales[i] = this.hourlyCustomers[i] * this.avgCookiesPerSale;
-      this.hourlySales[i] = this.hourlySales[i].toFixed(0);
-      this.dailyTotal += Number(this.hourlySales[i]);
-    }
-  },
-
-  getListableSales: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.listableSales[i] = listableSales[i] + this.hourlySales[i] + ' cookies';
-    }
-    this.listableSales.push('Total: ' + this.dailyTotal + ' cookies');
-  },
-
-  render: function () {
-
-    // **** DOM ****
-    let articleElem = document.createElement('article');
-    salesSection.appendChild(articleElem);
-
-    let h2Elem = document.createElement('h2');
-    h2Elem.textContent = this.City;
-    articleElem.appendChild(h2Elem);
-
-    let ulElem = document.createElement('ul');
-    articleElem.appendChild(ulElem);
-
-    for (let i = 0; i < this.hoursOfOperation + 1; i++) {
-      let liElem = document.createElement('li');
-      liElem.textContent = this.listableSales[i];
-      ulElem.appendChild(liElem);
-    }
-  }
-};
-
-let Lima = {
-  City: 'Lima',
-  hoursOfOperation: 15,
-  minCust: 2,
-  maxCust: 16,
-  avgCookiesPerSale: 4.6,
-  dailyTotal: 0,
-  hourlyCustomers: [],
-  hourlySales: [],
-  listableSales: [],
-
-  getCustomers: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.hourlyCustomers[i] = randomInt(this.minCust, this.maxCust);
-    }
-  },
-
-  getSales: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.hourlySales[i] = this.hourlyCustomers[i] * this.avgCookiesPerSale;
-      this.hourlySales[i] = this.hourlySales[i].toFixed(0);
-      this.dailyTotal += Number(this.hourlySales[i]);
-    }
-  },
-
-  getListableSales: function () {
-    for (let i = 0; i < this.hoursOfOperation; i++) {
-      this.listableSales[i] = listableSales[i] + this.hourlySales[i] + ' cookies';
-    }
-    this.listableSales.push('Total: ' + this.dailyTotal + ' cookies');
-  },
-
-  render: function () {
-
-    // **** DOM ****
-    let articleElem = document.createElement('article');
-    salesSection.appendChild(articleElem);
-
-    let h2Elem = document.createElement('h2');
-    h2Elem.textContent = this.City;
-    articleElem.appendChild(h2Elem);
-
-    let ulElem = document.createElement('ul');
-    articleElem.appendChild(ulElem);
-
-    for (let i = 0; i < this.hoursOfOperation + 1; i++) {
-      let liElem = document.createElement('li');
-      liElem.textContent = this.listableSales[i];
-      ulElem.appendChild(liElem);
-    }
-  }
-};
-
-
-
-
-
-//EXECUTABLE CODE
-Seattle.getCustomers();
-Seattle.getSales();
-Seattle.getListableSales();
-Seattle.render();
-
-Tokyo.getCustomers();
-Tokyo.getSales();
-Tokyo.getListableSales();
-Tokyo.render();
-
-Dubai.getCustomers();
-Dubai.getSales();
-Dubai.getListableSales();
-Dubai.render();
-
-Paris.getCustomers();
-Paris.getSales();
-Paris.getListableSales();
-Paris.render();
-
-Lima.getCustomers();
-Lima.getSales();
-Lima.getListableSales();
-Lima.render();
