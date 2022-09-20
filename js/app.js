@@ -11,9 +11,6 @@ let openHours = ['6:00am', '7:00am', '8:00am', '9:00am', '10:00am', '11:00am', '
 
 let storefronts = [];
 
-let currentTableRow = 0;
-
-
 let tableReference = '';
 //* CONSTRUCTOR
 
@@ -81,6 +78,27 @@ StoreLocation.prototype.getListableSales = function () {
 
 };
 
+StoreLocation.prototype.renderRow = function () {
+  let tableElem = tableReference;
+
+  let tableRow = document.createElement('tr');
+  tableElem.appendChild(tableRow);
+
+  let tableData = document.createElement('td');
+  tableRow.appendChild(tableData);
+  tableData.textContent = this.city;
+
+  for (let i = 0; i < openHours.length; i++) {
+    tableData = document.createElement('td');
+    tableData.textContent = this.hourlySales[i];
+    tableRow.appendChild(tableData);
+  }
+  tableData = document.createElement('td');
+  tableData.textContent = this.dailyTotal;
+  tableRow.appendChild(tableData);
+};
+
+
 //? also gets the reference for the table just created
 function deployTableHeader() {
   let articleElem = document.createElement('article');
@@ -105,7 +123,7 @@ function deployTableHeader() {
   tableHeader.textContent = 'Daily Location Total';
   return tableReference = tableElem;
 }
-
+/*
 function deployTableRow() {
   let tableElem = tableReference;
   for (let i = 0; i < storefronts.length; i++) {
@@ -127,7 +145,7 @@ function deployTableRow() {
     currentTableRow++;
   }
 }
-
+*/
 // StoreLocation.prototype.render = function () {
 //   // **** DOM ****
 //   let articleElem = document.createElement('article');
@@ -186,17 +204,18 @@ salesSection.appendChild(articleElem);
 
 
 //? EXECUTE SETUP FUNCTIONS
-
+deployTableHeader();
 //! EXECUTE PROTOTYPE METHODS
 for (let i = 0; i < storefronts.length; i++) {
   storefronts[i].getCustomers();
   storefronts[i].getSales();
+  storefronts[i].renderRow();
   //storefronts[i].getListableSales();
   //storefronts[i].render();
 }
 
-deployTableHeader();
-deployTableRow();
+
+//deployTableRow();
 
 //* HELPER FUNCTIONS/UTILITIES
 
