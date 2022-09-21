@@ -11,6 +11,10 @@ let openHours = ['6:00am', '7:00am', '8:00am', '9:00am', '10:00am', '11:00am', '
 
 let storefronts = [];
 
+let storeTotals = [];
+
+let totalTotal = 0;
+
 let tableReference = '';
 
 
@@ -18,7 +22,7 @@ let tableReference = '';
 
 function StoreLocation(city, minCust, maxCust, avgCookiesPerSale) {
   this.city = city;
-  this.hoursOfOperation = 15;
+  this.hoursOfOperation = 14;
   this.minCust = minCust;
   this.maxCust = maxCust;
   this.avgCookiesPerSale = avgCookiesPerSale;
@@ -51,9 +55,11 @@ StoreLocation.prototype.getCustomers = function () {
 StoreLocation.prototype.getSales = function () {
   for (let i = 0; i < this.hoursOfOperation; i++) {
     this.hourlySales[i] = this.hourlyCustomers[i] * this.avgCookiesPerSale;
-    this.hourlySales[i] = this.hourlySales[i].toFixed(0);
+    this.hourlySales[i] = Math.floor(this.hourlySales[i]);
     this.dailyTotal += Number(this.hourlySales[i]);
+
   }
+
 };
 
 StoreLocation.prototype.renderRow = function () {
@@ -101,6 +107,50 @@ function deployTableHeader() {
   return tableReference = tableElem;
 }
 
+function getStoreTotals() {
+  for (let i = 0; i < openHours.length; i++) { //slow loop, hours of OP
+    let hourlyTotal = 0;
+    for (let j = 0; j < storefronts.length; j++) {
+      hourlyTotal += Number(storefronts[j].hourlySales[i]);
+
+
+
+    }
+    storeTotals.push(hourlyTotal);
+
+  }
+}
+
+
+
+
+
+function deployStoreTotals() {
+  let tableElem = tableReference;
+
+  let tableRow = document.createElement('tr');
+  tableElem.appendChild(tableRow);
+
+  let tableData = document.createElement('td');
+  tableData.textContent = 'Totals';
+  tableRow.appendChild(tableData);
+  for (let i = 0; i < openHours.length; i++) {
+    tableData = document.createElement('td');
+    tableData.textContent = storeTotals[i];
+    tableRow.appendChild(tableData);
+  }
+
+  //? Make final entry, a total of totals.
+  for (let i = 0; i < storeTotals.length; i++) {
+    totalTotal += storeTotals[i];
+  }
+  tableData = document.createElement('td');
+  tableData.textContent = totalTotal;
+  tableRow.appendChild(tableData);
+}
+
+
+
 //? EXECUTE SETUP FUNCTIONS
 
 deployTableHeader();
@@ -114,6 +164,9 @@ for (let i = 0; i < storefronts.length; i++) {
   storefronts[i].renderRow();
 }
 
+//! EXECUTE FOOTER FUNCTIONS
+getStoreTotals();
+deployStoreTotals();
 
 //* HELPER FUNCTIONS/UTILITIES
 
