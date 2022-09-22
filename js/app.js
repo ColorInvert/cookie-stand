@@ -84,6 +84,7 @@ StoreLocation.prototype.renderRow = function () {
 
 
 //? Creates the header for the table, and also grabs and globally stores a reference to the table we just created so it can be navigated to by the renderRow prototypes.
+
 function deployTableHeader() {
   let articleElem = document.createElement('article');
   salesSection.appendChild(articleElem);
@@ -149,6 +150,21 @@ function deployStoreTotals() {
   tableRow.appendChild(tableData);
 }
 
+//* HANDLING OF NEW CITY SUBMIT BUTTON FOR TABLE
+function handleSubmit(event) {
+
+  //* Prevent normal behavior of the event firing and inject custom behavior
+  event.preventDefault();
+
+  //* get the data of our forms
+  let newLocCity = event.target.cityName.value;
+  let newLocMin = event.target.MinCust.value;
+  let newLocMax = event.target.MaxCust.value;
+  let newLocAvg = event.target.avgSale.value;
+
+  //*Turn this data into a new store
+  new StoreLocation(newLocCity, newLocMin, newLocMax, newLocAvg);
+}
 
 
 //? EXECUTE SETUP FUNCTIONS
@@ -168,9 +184,16 @@ for (let i = 0; i < storefronts.length; i++) {
 getStoreTotals();
 deployStoreTotals();
 
+
+//! EVENT LISTENER FOR FORM SUBMIT BUTTON
+newLocationForm.addEventListener('submit', handleSubmit);
+
+
 //* HELPER FUNCTIONS/UTILITIES
 
 // ? body of function grabbed from MDN
 function randomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+

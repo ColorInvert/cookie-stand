@@ -30,12 +30,12 @@ header {
 
 }
 
-h1{
+h1 {
   font-family: 'Ubuntu', sans-serif;
   margin: 30px;
   font-size: 50px;
   font-weight: 600;
-  color:#3d5b59;
+  color: #3d5b59;
   text-align: center;
 
 }
@@ -115,9 +115,11 @@ section {
   color: #3d5b59;
 
 }
-section img{
-  width:360px;
+
+section img {
+  width: 360px;
 }
+
 /*scrollable container*/
 p {
   height: 300px;
@@ -159,13 +161,39 @@ footer p {
   height: 30px;
 }
 
-footer img{
-  height:80px
+footer img {
+  height: 80px
 }
 
 
 
 /* sales related CSS */
+
+/*submit form related CSS*/
+form {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  max-width: 200px;
+}
+
+fieldset button {
+  padding: 5px 5px;
+  border-radius: 5px;
+  font-size: medium;
+  font-weight: 600;
+  background-color: #ffffff;
+}
+
+fieldset button:hover {
+  background-color: #797979
+}
+
+label {}
+
+input {}
+
 th {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   background-color: #ff8373;
