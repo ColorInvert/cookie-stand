@@ -31,7 +31,7 @@ header {
 }
 
 h1 {
-  font-family: 'Ubuntu', sans-serif;
+  font-family: 'Dangrek', cursive;
   margin: 30px;
   font-size: 50px;
   font-weight: 600;
@@ -67,17 +67,17 @@ header ul li {
 
 a {
   text-decoration: none;
-  color: #B99095
+  color: #B99095;
 }
 
 body {
-  background-color: #B5E5CF
+  background-color: #B5E5CF;
 }
 
 main {
   width: 960px;
   margin: auto;
-  background-color: #B5E5CF
+  background-color: #B5E5CF;
 }
 
 main img {
@@ -101,8 +101,9 @@ h2 {
   font-family: 'Ubuntu', sans-serif;
   margin-left: 30px;
   margin-bottom: 10px;
-  font-size: large;
+  font-size: x-large;
   font-weight: 600;
+  color: #2e19a3;
 
 }
 
@@ -111,8 +112,8 @@ section {
   font-family: 'Times New Roman', Times, serif;
   margin-bottom: 30px;
 
-  font-size: medium;
-  color: #3d5b59;
+  font-size: large;
+  color: #3d3d5b;
 
 }
 
@@ -138,11 +139,12 @@ button {
   display: inline-block;
   font-size: large;
   font-weight: 600;
-  background-color: #B99095
+  background-color: #B99095;
+  color: rgb(182, 221, 236);
 }
 
 button:hover {
-  background-color: #FCB5AC
+  background-color: #FCB5AC;
 }
 
 footer {
@@ -162,7 +164,7 @@ footer p {
 }
 
 footer img {
-  height: 80px
+  height: 80px;
 }
 
 
@@ -187,7 +189,7 @@ fieldset button {
 }
 
 fieldset button:hover {
-  background-color: #797979
+  background-color: #797979;
 }
 
 th {
@@ -196,7 +198,7 @@ th {
   justify-content: center;
 }
 
-;
+
 
 tr {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -212,5 +214,3 @@ td {
   justify-content: center;
   color: rgb(0, 0, 0);
 }
-
-;
